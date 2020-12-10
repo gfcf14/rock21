@@ -1,7 +1,9 @@
 import * as Phaser from 'phaser';
+import { Player } from './entities';
 
 export class GameScene extends Phaser.Scene {
-  character: Phaser.Physics.Arcade.Sprite;
+  player: Player;
+  keyRight: Phaser.Input.Keyboard.Key;
 
   constructor() {
     super({ key: 'game' });
@@ -10,18 +12,25 @@ export class GameScene extends Phaser.Scene {
   preload() {
     this.load.setPath('../assets/');
 
-    this.load.image('character', 'character.png');
+    this.load.image('player', 'player.png');
   }
 
   create() {
-    this.character = this.physics.add.sprite(400, 300, 'character');
+    // this.player = this.physics.add.sprite(400, 300, 'player');
+    this.player = new Player(this, 400, 300, 'player');
 
-    if (this.character.body instanceof Phaser.Physics.Arcade.Body) {
-      this.character.body.setCollideWorldBounds(true);
-    }
+    // if (this.player.body instanceof Phaser.Physics.Arcade.Body) {
+    //   this.player.body.setCollideWorldBounds(true);
+    // }
+
+    this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
   }
 
   update() {
+    this.player.update();
 
+    if (this.keyRight.isDown) {
+      this.player.moveRight();
+    }
   }
 }
