@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { GameScene } from './game';
 
 export class Entity extends Phaser.GameObjects.Sprite {
+  displacement: number = 32;
   scene: GameScene;
 
   constructor(scene, x, y, key, type) {
@@ -23,13 +24,19 @@ export class Player extends Entity {
     this.setData('speed', 32);
   }
 
+  moveUp() {
+    this.y -= this.displacement;
+  }
   moveRight() {
-    this.body.velocity.x = this.getData('speed');
+    this.x += this.displacement;
+  }
+  moveDown() {
+    this.y += this.displacement;
+  }
+  moveLeft() {
+    this.x -= this.displacement;
   }
 
   update() {
-    if (this.body instanceof Phaser.Physics.Arcade.Body) {
-      this.body.setVelocity(0, 0);
-    }
   }
 }

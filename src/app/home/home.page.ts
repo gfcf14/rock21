@@ -20,7 +20,7 @@ export class HomePage implements OnInit, OnDestroy {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 300 },
+          // gravity: { y: 300 },
           debug: false
         }
       },
