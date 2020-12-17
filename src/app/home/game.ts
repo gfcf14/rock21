@@ -27,9 +27,14 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, 400, 300, 'player');
     this.rock = new Rock(this, 400, 0, 'rock');
 
+    // adds all keys defined by availableKeys
     this.availableKeys.forEach(type => {
       this.keys.push(new GameKey(this.player, this, type));
     }, this);
+
+    this.physics.add.collider(this.player, this.rock, (player: Player, rock: Rock) => {
+      rock.destroy();
+    });
   }
 
   fireEvent(keyCode) {
