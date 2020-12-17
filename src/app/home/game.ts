@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { Player, Rock } from './entities';
-import { GameKey } from './helpers';
+import { DIMENSION, GameKey } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
@@ -21,6 +21,7 @@ export class GameScene extends Phaser.Scene {
 
     this.load.image('player', 'player.png');
     this.load.image('rock', 'rock.png');
+    this.load.image('explosion', 'explosion.png');
   }
 
   create() {
@@ -33,8 +34,21 @@ export class GameScene extends Phaser.Scene {
     }, this);
 
     this.physics.add.collider(this.player, this.rock, (player: Player, rock: Rock) => {
+      const { x, y } = player;
+
       rock.destroy();
+      player.destroy();
+
+      this.setBoom(x - DIMENSION, y - DIMENSION);
     });
+  }
+
+  setBoom(x, y) {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        this.add.sprite(x + (DIMENSION * i), y + (DIMENSION * j), 'explosion');
+      }
+    }
   }
 
   fireEvent(keyCode) {

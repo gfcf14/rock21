@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { GameScene } from './game';
+import { DIMENSION } from './helpers';
 
 export class Entity extends Phaser.GameObjects.Sprite {
   displacement: number;
@@ -13,7 +14,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
     this.scene.physics.world.enableBody(this, 0);
     this.setData('type', type);
 
-    this.displacement = 32;
+    this.displacement = DIMENSION;
   }
 }
 

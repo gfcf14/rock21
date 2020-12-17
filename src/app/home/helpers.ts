@@ -1,6 +1,7 @@
 import { Player } from './entities';
 import { GameScene } from './game';
 
+export const DIMENSION: number = 32;
 export class GameKey {
   isPressed: boolean;
   key: Phaser.Input.Keyboard.Key;
