@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { GameScene } from './game';
 
 export class Entity extends Phaser.GameObjects.Sprite {
-  displacement: number = 32;
+  displacement: number;
   scene: GameScene;
 
   constructor(scene, x, y, key, type) {
@@ -12,6 +12,8 @@ export class Entity extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
     this.scene.physics.world.enableBody(this, 0);
     this.setData('type', type);
+
+    this.displacement = 32;
   }
 }
 
@@ -19,9 +21,7 @@ export class Player extends Entity {
   scene: GameScene;
 
   constructor(scene, x, y, key) {
-    super(scene, x, y, key, 'Player');
-
-    this.setData('speed', 32);
+    super(scene, x, y, key, 'player');
   }
 
   moveUp() {
@@ -38,5 +38,17 @@ export class Player extends Entity {
   }
 
   update() {
+  }
+}
+
+export class Rock extends Entity {
+  scene: GameScene;
+
+  constructor(scene, x, y, key) {
+    super(scene, x, y, key, 'rock');
+  }
+
+  fall() {
+    this.y += this.displacement;
   }
 }

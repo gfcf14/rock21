@@ -1,13 +1,6 @@
 import { Player } from './entities';
 import { GameScene } from './game';
 
-export enum PLAYER_MOVEMENTS {
-  LEFT = 37,
-  UP = 38,
-  RIGHT = 39,
-  DOWN = 40
-};
-
 export class GameKey {
   isPressed: boolean;
   key: Phaser.Input.Keyboard.Key;

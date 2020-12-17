@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Player } from './entities';
+import { Player, Rock } from './entities';
 import { GameKey } from './helpers';
 
 export class GameScene extends Phaser.Scene {
@@ -8,6 +8,7 @@ export class GameScene extends Phaser.Scene {
   keys: GameKey[] = [];
   player: Player;
   timer: number = 0;
+  rock: Rock;
 
   constructor() {
     super({ key: 'game' });
@@ -19,10 +20,12 @@ export class GameScene extends Phaser.Scene {
     this.load.setPath('../assets/');
 
     this.load.image('player', 'player.png');
+    this.load.image('rock', 'rock.png');
   }
 
   create() {
     this.player = new Player(this, 400, 300, 'player');
+    this.rock = new Rock(this, 400, 0, 'rock');
 
     this.availableKeys.forEach(type => {
       this.keys.push(new GameKey(this.player, this, type));
@@ -49,11 +52,13 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  update(time, delta) {
+  update() {
     this.timer++;
 
     // execute once every 12 frames
-    if (this.timer % 5 == 0) {
+    if (this.timer % 4 == 0) {
+      this.rock.fall();
+
       this.keys.forEach(key => {
         if (key.isPressed) {
           this.fireEvent(key.keyCode);
