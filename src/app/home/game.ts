@@ -4,12 +4,15 @@ import { GameKey } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
+  gameKeys: typeof Phaser.Input.Keyboard.KeyCodes;
   keys: GameKey[] = [];
   player: Player;
-  playerMovements: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
+  timer: number = 0;
 
   constructor() {
     super({ key: 'game' });
+
+    this.gameKeys = Phaser.Input.Keyboard.KeyCodes;
   }
 
   preload() {
@@ -21,28 +24,41 @@ export class GameScene extends Phaser.Scene {
   create() {
     this.player = new Player(this, 400, 300, 'player');
 
-    this.availableKeys.forEach((type, i) => {
+    this.availableKeys.forEach(type => {
       this.keys.push(new GameKey(this.player, this, type));
-
-      this.keys[i].setDown(this.playerMovements);
     }, this);
   }
 
-  update() {
-    // if (this.keyUp.isPressed) {
-    //   this.player.moveUp();
-    // }
+  fireEvent(keyCode) {
+    switch(keyCode) {
+      case this.gameKeys.UP:
+        this.player.moveUp();
+      break;
+      case this.gameKeys.RIGHT:
+        this.player.moveRight();
+      break;
+      case this.gameKeys.DOWN:
+        this.player.moveDown();
+      break;
+      case this.gameKeys.LEFT:
+        this.player.moveLeft();
+      break;
+      default:
+        console.log('Non-implemented stroke');
+      break;
+    }
+  }
 
-    // if (this.keyRight.isPressed) {
-    //   this.player.moveRight();
-    // }
+  update(time, delta) {
+    this.timer++;
 
-    // if (this.keyDown.isPressed) {
-    //   this.player.moveDown();
-    // }
-
-    // if (this.keyLeft.isPressed) {
-    //   this.player.moveLeft();
-    // }
+    // execute once every 12 frames
+    if (this.timer % 5 == 0) {
+      this.keys.forEach(key => {
+        if (key.isPressed) {
+          this.fireEvent(key.keyCode);
+        }
+      });
+    }
   }
 }

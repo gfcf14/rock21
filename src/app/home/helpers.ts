@@ -11,6 +11,7 @@ export enum PLAYER_MOVEMENTS {
 export class GameKey {
   isPressed: boolean;
   key: Phaser.Input.Keyboard.Key;
+  keyCode: number;
   player: Player;
   scene: GameScene;
   type: string;
@@ -18,40 +19,21 @@ export class GameKey {
   public constructor(player: Player, scene: GameScene, type: string) {
     this.scene = scene;
     this.isPressed = false;
-    this.key = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes[`${type}`]);
+    this.keyCode = Phaser.Input.Keyboard.KeyCodes[`${type}`];
+    this.key = this.scene.input.keyboard.addKey(this.keyCode);
     this.player = player;
     this.type = type;
+
+    this.setEvents();
   }
 
-  setDown(list) {
-    console.log(list);
+  setEvents() {
     this.key.on('down', e => {
-      // this.isPressed = true;
-
-      // if any of the arrows were pressed
-      const { keyCode } = e;
-      if (keyCode >= 37 && keyCode <= 40) {
-        switch(keyCode) {
-          case PLAYER_MOVEMENTS.LEFT :
-            this.player.moveLeft();
-          break;
-          case PLAYER_MOVEMENTS.UP :
-            this.player.moveUp();
-          break;
-          case PLAYER_MOVEMENTS.RIGHT :
-            this.player.moveRight();
-          break;
-          case PLAYER_MOVEMENTS.DOWN :
-            this.player.moveDown();
-          break;
-        }
-      }
+      this.isPressed = true;
     });
-  }
 
-  setUp() {
     this.key.on('up', e => {
-      // this.isPressed = false;
+      this.isPressed = false;
     });
   }
 }
