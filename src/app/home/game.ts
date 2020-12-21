@@ -1,10 +1,9 @@
 import * as Phaser from 'phaser';
 import { Player, Rock } from './entities';
-import { DIMENSION, GameKey } from './helpers';
+import { DIMENSION, GAME_KEYS, GameKey } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
-  gameKeys: typeof Phaser.Input.Keyboard.KeyCodes;
   keys: GameKey[] = [];
   player: Player;
   timer: number = 0;
@@ -12,8 +11,6 @@ export class GameScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'game' });
-
-    this.gameKeys = Phaser.Input.Keyboard.KeyCodes;
   }
 
   preload() {
@@ -52,17 +49,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   fireEvent(keyCode) {
+    console.log(keyCode);
     switch(keyCode) {
-      case this.gameKeys.UP:
+      case GAME_KEYS.UP:
         this.player.moveUp();
       break;
-      case this.gameKeys.RIGHT:
+      case GAME_KEYS.RIGHT:
         this.player.moveRight();
       break;
-      case this.gameKeys.DOWN:
+      case GAME_KEYS.DOWN:
         this.player.moveDown();
       break;
-      case this.gameKeys.LEFT:
+      case GAME_KEYS.LEFT:
         this.player.moveLeft();
       break;
       default:
@@ -76,11 +74,15 @@ export class GameScene extends Phaser.Scene {
 
     // execute once every 12 frames
     if (this.timer % 4 == 0) {
-      this.rock.fall();
+      if (typeof this.rock !== 'undefined') {
+        this.rock.fall();
+      }
 
       this.keys.forEach(key => {
         if (key.isPressed) {
           this.fireEvent(key.keyCode);
+        } else {
+          // this.stopMovement(key.keyCode);
         }
       });
     }

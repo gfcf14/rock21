@@ -2,6 +2,8 @@ import { Player } from './entities';
 import { GameScene } from './game';
 
 export const DIMENSION: number = 32;
+export const SPEED: number = 320;
+export const GAME_KEYS: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 export class GameKey {
   isPressed: boolean;
   key: Phaser.Input.Keyboard.Key;
@@ -24,10 +26,14 @@ export class GameKey {
   setEvents() {
     this.key.on('down', e => {
       this.isPressed = true;
+
+      // this.player.direction = 
     });
 
     this.key.on('up', e => {
       this.isPressed = false;
+
+      this.player.stopSpeed(e.keyCode);
     });
   }
 }

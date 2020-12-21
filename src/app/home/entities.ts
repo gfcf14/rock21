@@ -1,9 +1,9 @@
 import * as Phaser from 'phaser';
 import { GameScene } from './game';
-import { DIMENSION } from './helpers';
+import { GAME_KEYS, SPEED } from './helpers';
 
 export class Entity extends Phaser.GameObjects.Sprite {
-  displacement: number;
+  speed: number;
   scene: GameScene;
 
   constructor(scene, x, y, key, type) {
@@ -14,28 +14,39 @@ export class Entity extends Phaser.GameObjects.Sprite {
     this.scene.physics.world.enableBody(this, 0);
     this.setData('type', type);
 
-    this.displacement = DIMENSION;
+    this.speed = SPEED;
   }
 }
 
 export class Player extends Entity {
+  // direction: string;
   scene: GameScene;
 
   constructor(scene, x, y, key) {
     super(scene, x, y, key, 'player');
+
+    // this.direction = '';
   }
 
   moveUp() {
-    this.y -= this.displacement;
+    this.body.velocity.y = -this.speed;
   }
   moveRight() {
-    this.x += this.displacement;
+    this.body.velocity.x = this.speed;
   }
   moveDown() {
-    this.y += this.displacement;
+    this.body.velocity.y = this.speed;
   }
   moveLeft() {
-    this.x -= this.displacement;
+    this.body.velocity.x = -this.speed;
+  }
+
+  stopSpeed(keyCode) {
+    if (keyCode == GAME_KEYS.LEFT || keyCode == GAME_KEYS.RIGHT) {
+      this.body.velocity.x = 0;
+    } else if (keyCode == GAME_KEYS.UP || keyCode == GAME_KEYS.DOWN) {
+      this.body.velocity.y = 0;
+    }
   }
 
   update() {
@@ -50,6 +61,6 @@ export class Rock extends Entity {
   }
 
   fall() {
-    this.y += this.displacement;
+    this.body.velocity.y = this.speed;
   }
 }
