@@ -45,13 +45,30 @@ export class Player extends Entity {
 }
 
 export class Rock extends Entity {
+  isGrounded: boolean;
   scene: GameScene;
 
   constructor(scene, x, y, key) {
     super(scene, x, y, key, 'rock');
+
+    this.isGrounded = false;
   }
 
   fall() {
-    this.body.velocity.y = this.speed;
+    if (typeof this.body !== 'undefined') {
+      if (!this.isGrounded) {
+        this.body.velocity.y = this.speed;
+      } else {
+        this.body.velocity.y = 0;
+      }
+    }
+  }
+}
+
+export class Grass extends Entity {
+  scene: GameScene;
+
+  constructor(scene, x, y, key) {
+    super(scene, x, y, key, 'grass');
   }
 }
