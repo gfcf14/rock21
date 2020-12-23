@@ -1,39 +1,21 @@
-import { Player } from './entities';
-import { GameScene } from './game';
-
 export const DIMENSION: number = 32;
 export const SPEED: number = 320;
 export const GAME_KEYS: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
-export class GameKey {
-  isPressed: boolean;
-  key: Phaser.Input.Keyboard.Key;
-  keyCode: number;
-  player: Player;
-  scene: GameScene;
-  type: string;
 
-  public constructor(player: Player, scene: GameScene, type: string) {
-    this.scene = scene;
-    this.isPressed = false;
-    this.keyCode = Phaser.Input.Keyboard.KeyCodes[`${type}`];
-    this.key = this.scene.input.keyboard.addKey(this.keyCode);
-    this.player = player;
-    this.type = type;
+export const MOVE_KEYS = {
+  'LEFT': 37,
+  'UP': 38,
+  'RIGHT': 39,
+  'DOWN': 40
+};
 
-    this.setEvents();
-  }
+export const MOVE_SPEEDS = {
+  'LEFT': { x: -SPEED, y: 0  },
+  'UP': { x: 0, y: -SPEED },
+  'RIGHT': { x: SPEED, y: 0 },
+  'DOWN': { x: 0, y: SPEED }
+};
 
-  setEvents() {
-    this.key.on('down', e => {
-      this.isPressed = true;
-
-      // this.player.direction = 
-    });
-
-    this.key.on('up', e => {
-      this.isPressed = false;
-
-      this.player.stopSpeed(e.keyCode);
-    });
-  }
-}
+export const getKeyByvalue = (obj, val) => {
+  return Object.keys(obj).find(key => obj[key] === val);
+};

@@ -1,10 +1,10 @@
 import * as Phaser from 'phaser';
 import { Player, Rock } from './entities';
-import { DIMENSION, GAME_KEYS, GameKey } from './helpers';
+import { DIMENSION, getKeyByvalue, MOVE_KEYS, MOVE_SPEEDS } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
-  keys: GameKey[] = [];
+  keys: Phaser.Input.Keyboard.Key[] = [];
   player: Player;
   timer: number = 0;
   rock: Rock;
@@ -26,9 +26,28 @@ export class GameScene extends Phaser.Scene {
     this.rock = new Rock(this, 400, 0, 'rock');
 
     // adds all keys defined by availableKeys
-    this.availableKeys.forEach(type => {
-      this.keys.push(new GameKey(this.player, this, type));
+    this.availableKeys.forEach(key => {
+      this.keys.push(this.input.keyboard.addKey(key));
     }, this);
+
+    this.keys.forEach(key => {
+      key.on('down', e => {
+        const { keyCode } = e;
+
+        if (Object.values(MOVE_KEYS).includes(keyCode)) {
+          this.player.direction = getKeyByvalue(MOVE_KEYS, keyCode);
+        }
+      });
+
+      key.on('up', e => {
+        const { keyCode } = e;
+
+        if (Object.values(MOVE_KEYS).includes(keyCode)) {
+          this.player.direction = '';
+          this.player.stop();
+        }
+      });
+    });
 
     this.physics.add.collider(this.player, this.rock, (player: Player, rock: Rock) => {
       const { x, y } = player;
@@ -48,43 +67,15 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  fireEvent(keyCode) {
-    console.log(keyCode);
-    switch(keyCode) {
-      case GAME_KEYS.UP:
-        this.player.moveUp();
-      break;
-      case GAME_KEYS.RIGHT:
-        this.player.moveRight();
-      break;
-      case GAME_KEYS.DOWN:
-        this.player.moveDown();
-      break;
-      case GAME_KEYS.LEFT:
-        this.player.moveLeft();
-      break;
-      default:
-        console.log('Non-implemented stroke');
-      break;
-    }
-  }
-
   update() {
     this.timer++;
 
-    // execute once every 12 frames
-    if (this.timer % 4 == 0) {
-      if (typeof this.rock !== 'undefined') {
-        this.rock.fall();
-      }
+    if (typeof this.rock !== 'undefined') {
+      this.rock.fall();
+    }
 
-      this.keys.forEach(key => {
-        if (key.isPressed) {
-          this.fireEvent(key.keyCode);
-        } else {
-          // this.stopMovement(key.keyCode);
-        }
-      });
+    if (this.player.direction) {
+      this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
     }
   }
 }
