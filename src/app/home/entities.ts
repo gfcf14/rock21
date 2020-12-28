@@ -35,9 +35,14 @@ export class Player extends Entity {
     this.body.velocity.y = y;
   }
 
-  stop() {
-    this.body.velocity.x = 0;
-    this.body.velocity.y = 0;
+  stop(stopX, stopY) {
+    if (stopX) {
+      this.body.velocity.x = 0;
+    }
+
+    if (stopY) {
+      this.body.velocity.y = 0;
+    }
   }
 
   update() {

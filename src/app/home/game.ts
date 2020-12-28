@@ -46,8 +46,20 @@ export class GameScene extends Phaser.Scene {
         const { keyCode } = e;
 
         if (Object.values(MOVE_KEYS).includes(keyCode)) {
-          this.player.direction = '';
-          this.player.stop();
+          const { direction } = this.player;
+
+          if (!direction || direction === getKeyByvalue(MOVE_KEYS, keyCode)) {
+            this.player.stop(true, true);
+            this.player.direction = '';
+          } else {
+            if (this.perpendicularToDirection(getKeyByvalue(MOVE_KEYS, keyCode), direction)) {
+              const { x, y } = this.player.body.velocity;
+
+              // stops velocities for whichever is active
+              this.player.stop(x != 0, y != 0);
+            }
+          }
+
         }
       });
     });
@@ -75,6 +87,14 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.grass, (player: Player, grass: Grass) => {
       grass.destroy();
     });
+  }
+
+  perpendicularToDirection(newDir, curDir) {
+    if (newDir === 'UP' || newDir === 'DOWN') {
+      return curDir === 'LEFT' || curDir === 'RIGHT';
+    }
+
+    return curDir === 'UP' || curDir === 'DOWN';
   }
 
   setBoom(x, y) {
