@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
-import { Grass, Player, Rock } from './entities';
-import { DIMENSION, getKeyByvalue, MOVE_KEYS, MOVE_SPEEDS } from './helpers';
+import { Entity, Grass, Player, Rock } from './entities';
+import { DIMENSION, getKeyByvalue, isFloating, MOVE_KEYS, MOVE_SPEEDS } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
@@ -9,6 +9,8 @@ export class GameScene extends Phaser.Scene {
   timer: number = 0;
   rock: Rock;
   grass: Grass;
+  gameSprites: Entity[] = [];
+  spriteCounter: number = 0;
 
   constructor() {
     super({ key: 'game' });
@@ -24,9 +26,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.player = new Player(this, 400, 300, 'player');
-    this.rock = new Rock(this, 400, 0, 'rock');
-    this.grass = new Grass(this, 400, 500, 'grass');
+    this.player = new Player(this, 400, 300, 'player', this.spriteCounter++);
+    this.gameSprites.push(this.player);
+
+    this.rock = new Rock(this, 400, 0, 'rock', this.spriteCounter++);
+    this.gameSprites.push(this.rock);
+
+    this.grass = new Grass(this, 400, 500, 'grass', this.spriteCounter++);
+    this.gameSprites.push(this.grass);
 
     // adds all keys defined by availableKeys
     this.availableKeys.forEach(key => {
@@ -79,12 +86,18 @@ export class GameScene extends Phaser.Scene {
 
     // stops rock from falling when touching grass
     this.physics.add.collider(this.rock, this.grass, (rock: Rock, grass: Grass) => {
-      rock.isGrounded = true;
+      rock.collidingSprite = grass.id;
+      rock.stop();
       grass.body.velocity.y = 0;
+
+      console.log(grass);
+      console.log(grass.id);
+      console.log(this.gameSprites[grass.id]);
     });
 
     // kills grass if player touches it
     this.physics.add.collider(this.player, this.grass, (player: Player, grass: Grass) => {
+      this.gameSprites[grass.id] = null;
       grass.destroy();
     });
   }
@@ -108,12 +121,24 @@ export class GameScene extends Phaser.Scene {
   update() {
     this.timer++;
 
-    if (typeof this.rock !== 'undefined') {
+    if (!this.rock.isGrounded) {
       this.rock.fall();
+    } else {
+      // console.log(this.gameSprites[this.rock.collidingSprite].body);
+      if (this.isFloating(this.rock)) {
+        this.rock.isGrounded = false;
+      }
     }
+
+    console.log(this.rock.isGrounded);
 
     if (this.player.direction) {
       this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
     }
   }
+
+   isFloating = (sprite: Rock) => {
+    console.log(this.gameSprites[sprite.collidingSprite]);
+    return typeof this.gameSprites[sprite.collidingSprite] == null;
+  };
 }
