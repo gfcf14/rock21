@@ -89,13 +89,9 @@ export class GameScene extends Phaser.Scene {
       rock.collidingSprite = grass.id;
       rock.stop();
       grass.body.velocity.y = 0;
-
-      console.log(grass);
-      console.log(grass.id);
-      console.log(this.gameSprites[grass.id]);
     });
 
-    // kills grass if player touches it
+    // removes grass if player touches it
     this.physics.add.collider(this.player, this.grass, (player: Player, grass: Grass) => {
       this.gameSprites[grass.id] = null;
       grass.destroy();
@@ -124,13 +120,10 @@ export class GameScene extends Phaser.Scene {
     if (!this.rock.isGrounded) {
       this.rock.fall();
     } else {
-      // console.log(this.gameSprites[this.rock.collidingSprite].body);
       if (this.isFloating(this.rock)) {
         this.rock.isGrounded = false;
       }
     }
-
-    console.log(this.rock.isGrounded);
 
     if (this.player.direction) {
       this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
@@ -138,7 +131,6 @@ export class GameScene extends Phaser.Scene {
   }
 
    isFloating = (sprite: Rock) => {
-    console.log(this.gameSprites[sprite.collidingSprite]);
-    return typeof this.gameSprites[sprite.collidingSprite] == null;
+    return !this.gameSprites[sprite.collidingSprite];
   };
 }

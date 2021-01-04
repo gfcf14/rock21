@@ -64,11 +64,7 @@ export class Rock extends Entity {
 
   fall() {
     if (typeof this.body !== 'undefined') {
-    //   if (!this.isGrounded) {
-        this.body.velocity.y = this.speed;
-      // } else {
-      //   this.body.velocity.y = 0;
-      // }
+      this.body.velocity.y = this.speed;
     }
   }
 
