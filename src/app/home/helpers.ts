@@ -1,22 +1,21 @@
-export const DIMENSION: number = 32;
-export const SPEED: number = 320;
-export const GAME_KEYS: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
-
-export const MOVE_KEYS = {
-  'LEFT': 37,
-  'UP': 38,
-  'RIGHT': 39,
-  'DOWN': 40
-};
-
-export const MOVE_SPEEDS = {
-  'LEFT': { x: -SPEED, y: 0  },
-  'UP': { x: 0, y: -SPEED },
-  'RIGHT': { x: SPEED, y: 0 },
-  'DOWN': { x: 0, y: SPEED }
-};
+import { Entity, Rock } from './entities';
 
 export const getKeyByvalue = (obj, val) => {
   return Object.keys(obj).find(key => obj[key] === val);
 };
 
+export const isFloating = (sprite: Entity, gameSprites: Entity[]) => {
+  if (sprite instanceof Rock) {
+    return !gameSprites[sprite.collidingSprite];
+  }
+
+  return false;
+};
+
+export const perpendicularToDirection = (newDir: string, curDir: string) => {
+  if (newDir === 'UP' || newDir === 'DOWN') {
+    return curDir === 'LEFT' || curDir === 'RIGHT';
+  }
+
+  return curDir === 'UP' || curDir === 'DOWN';
+}

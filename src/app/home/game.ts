@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
+import { DIMENSION, MOVE_KEYS, MOVE_SPEEDS} from './constants';
 import { Entity, Grass, Player, Rock } from './entities';
-import { DIMENSION, getKeyByvalue, isFloating, MOVE_KEYS, MOVE_SPEEDS } from './helpers';
+import { getKeyByvalue, isFloating, perpendicularToDirection } from './helpers';
 
 export class GameScene extends Phaser.Scene {
   availableKeys: string[] = [ 'UP', 'RIGHT', 'DOWN', 'LEFT' ];
@@ -59,7 +60,7 @@ export class GameScene extends Phaser.Scene {
             this.player.stop(true, true);
             this.player.direction = '';
           } else {
-            if (this.perpendicularToDirection(getKeyByvalue(MOVE_KEYS, keyCode), direction)) {
+            if (perpendicularToDirection(getKeyByvalue(MOVE_KEYS, keyCode), direction)) {
               const { x, y } = this.player.body.velocity;
 
               // stops velocities for whichever is active
@@ -98,14 +99,6 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  perpendicularToDirection(newDir, curDir) {
-    if (newDir === 'UP' || newDir === 'DOWN') {
-      return curDir === 'LEFT' || curDir === 'RIGHT';
-    }
-
-    return curDir === 'UP' || curDir === 'DOWN';
-  }
-
   setBoom(x, y) {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
@@ -120,7 +113,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.rock.isGrounded) {
       this.rock.fall();
     } else {
-      if (this.isFloating(this.rock)) {
+      if (isFloating(this.rock, this.gameSprites)) {
         this.rock.isGrounded = false;
       }
     }
@@ -129,8 +122,4 @@ export class GameScene extends Phaser.Scene {
       this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
     }
   }
-
-   isFloating = (sprite: Rock) => {
-    return !this.gameSprites[sprite.collidingSprite];
-  };
 }
