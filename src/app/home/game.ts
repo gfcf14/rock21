@@ -27,6 +27,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.add.grid(400, 300, 800, 600, DIMENSION, DIMENSION, 0x000000, 1, 0x00b456, 1);
+
     this.player = new Player(this, 400, 300, 'player', this.spriteCounter++);
     this.gameSprites.push(this.player);
 
@@ -47,6 +49,8 @@ export class GameScene extends Phaser.Scene {
 
         if (Object.values(MOVE_KEYS).includes(keyCode)) {
           this.player.direction = getKeyByvalue(MOVE_KEYS, keyCode);
+
+          this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
         }
       });
 
@@ -118,8 +122,8 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-    if (this.player.direction) {
-      this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
-    }
+    // if (this.player.direction) {
+    //   this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
+    // }
   }
 }

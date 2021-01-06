@@ -34,8 +34,9 @@ export class Player extends Entity {
     if (typeof this.body !== 'undefined') {
       const { x, y } = newVelocity;
 
-      this.body.velocity.x = x;
-      this.body.velocity.y = y;
+      // this.body.velocity.x = x;
+      // this.body.velocity.y = y;
+      this.scene.physics.moveTo(this, this.x + x, this.y + y, SPEED * 2);
     }
   }
 
