@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import * as Phaser from 'phaser';
+import { DIMENSION } from './constants';
 import { GameScene } from './game';
 
 @Component({
@@ -15,7 +16,7 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(private plt: Platform) {
     this.config = {
       // height: this.plt.height(),
-      height: 600,
+      height: 11 * DIMENSION,
       parent: 'gameContainer',
       physics: {
         default: 'arcade',
@@ -31,7 +32,7 @@ export class HomePage implements OnInit, OnDestroy {
       scene: GameScene,
       type: Phaser.AUTO,
       // width: this.plt.width()
-      width: 800
+      width: 20 * DIMENSION
     };
   }
 

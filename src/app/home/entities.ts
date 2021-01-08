@@ -45,8 +45,7 @@ export class Player extends Entity {
       if (stopX) {
         this.body.velocity.x = 0;
 
-        const lastX = Math.trunc(this.x);
-        const extraX = (lastX + (DIMENSION / 2)) % DIMENSION;
+        const extraX = Math.trunc(this.x) % DIMENSION;
 
         if (extraX > 0 /* && isNotColliding(direction, this.x) */) {
           const modifier = (direction === 'RIGHT') ? 1 : -1;
@@ -57,8 +56,7 @@ export class Player extends Entity {
       if (stopY) {
         this.body.velocity.y = 0;
 
-        const lastY = Math.trunc(this.y);
-        const extraY = (lastY + (DIMENSION / 2)) % DIMENSION;
+        const extraY = (Math.trunc(this.y) + (DIMENSION / 2)) % DIMENSION;
 
         if (extraY > 0 /* && isNotColliding(direction, this.x) */) {
           const modifier = (direction === 'DOWN') ? 1 : -1;

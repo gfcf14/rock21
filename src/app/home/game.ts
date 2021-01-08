@@ -27,15 +27,19 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    const { height, width } = this.cameras.main;
+
     this.add.grid(400, 300, 800, 600, DIMENSION, DIMENSION, 0x000000, 1, 0x00b456, 1);
 
-    this.player = new Player(this, 400, 300, 'player', this.spriteCounter++);
+    this.player = new Player(this, width / 2, height / 2, 'player', this.spriteCounter++).setOrigin(0, 0.5);
     this.gameSprites.push(this.player);
 
-    this.rock = new Rock(this, 400, 0, 'rock', this.spriteCounter++);
+    this.rock = new Rock(this, width / 2, 0, 'rock', this.spriteCounter++).setOrigin(0);
     this.gameSprites.push(this.rock);
 
-    this.grass = new Grass(this, 400, 500, 'grass', this.spriteCounter++);
+    console.log(this.rock)
+
+    this.grass = new Grass(this, width / 2, DIMENSION * 9, 'grass', this.spriteCounter++).setOrigin(0);
     this.gameSprites.push(this.grass);
 
     // adds all keys defined by availableKeys
@@ -91,7 +95,7 @@ export class GameScene extends Phaser.Scene {
         rock.destroy();
         player.destroy();
 
-        this.setBoom(x - DIMENSION, y - DIMENSION);
+        this.setBoom(x - (DIMENSION / 2), y - DIMENSION);
       }
     });
 
