@@ -48,9 +48,11 @@ export class GameScene extends Phaser.Scene {
         const { keyCode } = e;
 
         if (Object.values(MOVE_KEYS).includes(keyCode)) {
-          this.player.direction = getKeyByvalue(MOVE_KEYS, keyCode);
+          let { direction } = this.player;
 
-          this.player.move(MOVE_SPEEDS[`${this.player.direction}`]);
+          direction = getKeyByvalue(MOVE_KEYS, keyCode);
+
+          this.player.move(MOVE_SPEEDS[`${direction}`]);
         }
       });
 
@@ -58,17 +60,21 @@ export class GameScene extends Phaser.Scene {
         const { keyCode } = e;
 
         if (Object.values(MOVE_KEYS).includes(keyCode)) {
-          const { direction } = this.player;
+          let { direction } = this.player;
 
           if (!direction || direction === getKeyByvalue(MOVE_KEYS, keyCode)) {
-            this.player.stop(true, true);
-            this.player.direction = '';
+            if (direction.length <= 1) {
+              this.player.stop(true, true, direction);
+
+              direction = '';
+            }
+            // direction = '';
           } else {
             if (perpendicularToDirection(getKeyByvalue(MOVE_KEYS, keyCode), direction)) {
               const { x, y } = this.player.body.velocity;
 
               // stops velocities for whichever is active
-              this.player.stop(x != 0, y != 0);
+              this.player.stop(x != 0, y != 0, direction);
             }
           }
 
